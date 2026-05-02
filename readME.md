@@ -1,4 +1,2 @@
 ##Código de prueba para ver el funcionamiento de git
 
-proyect url: https://oplpkogwskkwlnhmyoei.supabase.co
-anon public key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wbHBrb2d3c2trd2xuaG15b2VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2ODUxMTksImV4cCI6MjA5MzI2MTExOX0.43Q8QMZIWyFChluiMjGGjd9FJvVDDliIcLTIVwJzF241
