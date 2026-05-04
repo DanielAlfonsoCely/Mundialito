@@ -4,7 +4,7 @@ import { login, registrar } from '../services/authService'
 
 export default function LoginPage() {
   const [modo, setModo] = useState('login')
-  const [form, setForm] = useState({ nombre: '', email: '', password: '', universidad: '' })
+  const [form, setForm] = useState({ nombre: '', email: '', password: '' })
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(false)
   const navigate = useNavigate()
@@ -21,7 +21,7 @@ export default function LoginPage() {
       if (modo === 'login') {
         await login(form.email, form.password)
       } else {
-        await registrar(form.nombre, form.email, form.password, form.universidad)
+        await registrar(form.nombre, form.email, form.password)
       }
       navigate('/')
     } catch (err) {
@@ -34,7 +34,7 @@ export default function LoginPage() {
   function cambiarModo(nuevoModo) {
     setModo(nuevoModo)
     setError('')
-    setForm({ nombre: '', email: '', password: '', universidad: '' })
+    setForm({ nombre: '', email: '', password: '' })
   }
 
   return (
@@ -94,21 +94,6 @@ export default function LoginPage() {
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
             />
           </div>
-
-          {modo === 'registro' && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Universidad</label>
-              <input
-                type="text"
-                name="universidad"
-                value={form.universidad}
-                onChange={handleChange}
-                required
-                placeholder="Tu universidad"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-              />
-            </div>
-          )}
 
           <button
             type="submit"

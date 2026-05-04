@@ -1,55 +1,57 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
 import LoginPage from './pages/LoginPage'
-import { logout } from './services/authService'
+import InicioPage from './pages/InicioPage'
+import ColeccionPage from './pages/ColeccionPage'
+import IntercambiosPage from './pages/IntercambiosPage'
+import PerfilPage from './pages/PerfilPage'
+import RegistrarIntercambioPage from './pages/RegistrarIntercambioPage'
+import NavBar from './components/NavBar'
 
-function AppContent() {
+function Cargando() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#f0effe]">
+      <p className="text-[#534AB7] text-sm font-semibold">Cargando...</p>
+    </div>
+  )
+}
+
+function AuthLayout() {
   const { usuario, cargando } = useAuth()
 
-  if (cargando) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-400 text-sm">Cargando...</p>
-      </div>
-    )
-  }
+  if (cargando) return <Cargando />
+  if (!usuario) return <Navigate to="/login" replace />
 
   return (
-    <Routes>
-      <Route
-        path="/login"
-        element={usuario ? <Navigate to="/" replace /> : <LoginPage />}
-      />
-      <Route
-        path="/"
-        element={
-          usuario ? (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-              <div className="text-center">
-                <h1 className="text-4xl font-bold text-gray-800 mb-2">Bienvenido</h1>
-                <p className="text-gray-500 text-sm mb-8">{usuario.email}</p>
-                <button
-                  onClick={logout}
-                  className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors"
-                >
-                  Cerrar sesión
-                </button>
-              </div>
-            </div>
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <div className="max-w-[430px] mx-auto bg-white min-h-screen">
+      <div className="pb-[72px]">
+        <Outlet context={{ usuario }} />
+      </div>
+      <NavBar />
+    </div>
   )
+}
+
+function PublicRoute({ children }) {
+  const { usuario, cargando } = useAuth()
+  if (cargando) return <Cargando />
+  return usuario ? <Navigate to="/" replace /> : children
 }
 
 export default function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <Routes>
+        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+        <Route element={<AuthLayout />}>
+          <Route path="/" element={<InicioPage />} />
+          <Route path="/coleccion" element={<ColeccionPage />} />
+          <Route path="/intercambios" element={<IntercambiosPage />} />
+          <Route path="/perfil" element={<PerfilPage />} />
+          <Route path="/registrar-intercambio" element={<RegistrarIntercambioPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </BrowserRouter>
   )
 }

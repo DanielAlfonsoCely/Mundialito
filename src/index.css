@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+* {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background-color: #f0effe;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
