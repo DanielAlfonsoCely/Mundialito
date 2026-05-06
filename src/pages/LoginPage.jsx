@@ -4,7 +4,7 @@ import { login, registrar } from '../services/authService'
 
 export default function LoginPage() {
   const [modo, setModo] = useState('login')
-  const [form, setForm] = useState({ nombre: '', email: '', password: '' })
+  const [form, setForm] = useState({ nombre: '', email: '', password: '', telefono: '' })
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(false)
   const navigate = useNavigate()
@@ -21,7 +21,7 @@ export default function LoginPage() {
       if (modo === 'login') {
         await login(form.email, form.password)
       } else {
-        await registrar(form.nombre, form.email, form.password)
+        await registrar(form.nombre, form.email, form.password, form.telefono)
       }
       navigate('/')
     } catch (err) {
@@ -34,7 +34,7 @@ export default function LoginPage() {
   function cambiarModo(nuevoModo) {
     setModo(nuevoModo)
     setError('')
-    setForm({ nombre: '', email: '', password: '' })
+    setForm({ nombre: '', email: '', password: '', telefono: '' })
   }
 
   return (
@@ -55,18 +55,32 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {modo === 'registro' && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-              <input
-                type="text"
-                name="nombre"
-                value={form.nombre}
-                onChange={handleChange}
-                required
-                placeholder="Tu nombre completo"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-              />
-            </div>
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                <input
+                  type="text"
+                  name="nombre"
+                  value={form.nombre}
+                  onChange={handleChange}
+                  required
+                  placeholder="Tu nombre completo"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                <input
+                  type="tel"
+                  name="telefono"
+                  value={form.telefono}
+                  onChange={handleChange}
+                  required
+                  placeholder="+54 9 11 1234-5678"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                />
+              </div>
+            </>
           )}
 
           <div>

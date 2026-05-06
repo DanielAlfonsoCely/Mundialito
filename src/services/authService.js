@@ -1,6 +1,6 @@
 import { supabase } from './supabaseClient'
 
-export async function registrar(nombre, email, password) {
+export async function registrar(nombre, email, password, telefono) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -15,7 +15,7 @@ export async function registrar(nombre, email, password) {
   const letras = nombre.replace(/[^a-zA-Z]/g, '').slice(0, 4).toUpperCase().padEnd(4, 'X')
   const user_code = `${letras}-${String(n).padStart(4, '0')}`
 
-  await supabase.from('perfiles').update({ user_code }).eq('id', data.user.id)
+  await supabase.from('perfiles').update({ user_code, telefono }).eq('id', data.user.id)
 
   return data
 }

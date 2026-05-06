@@ -1,7 +1,7 @@
+import { useState, useEffect } from 'react'
 import { useOutletContext, useNavigate } from 'react-router-dom'
-
-const STATS = { repetidas: 0, meFaltan: 0, tengo: 0 }
-const TOTAL_LAMINAS = 0
+import { TOTAL_LAMINAS } from '../data/albumData'
+import { obtenerStats } from '../services/coleccionService'
 
 const QUICK_ACTIONS = [
   {
@@ -30,11 +30,16 @@ const QUICK_ACTIONS = [
 export default function InicioPage() {
   const { usuario } = useOutletContext()
   const navigate = useNavigate()
+  const [stats, setStats] = useState(null)
+
+  useEffect(() => {
+    obtenerStats(usuario.id).then(setStats)
+  }, [usuario.id])
 
   const nombre = usuario?.user_metadata?.nombre || usuario?.email || ''
   const primerNombre = nombre.split(' ')[0]
   const inicial = nombre.charAt(0).toUpperCase()
-  const progreso = TOTAL_LAMINAS === 0 ? 0 : Math.round((STATS.tengo / TOTAL_LAMINAS) * 100)
+  const progreso = stats?.porcentaje ?? 0
 
   return (
     <div>
@@ -62,7 +67,9 @@ export default function InicioPage() {
             <span className="text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>
               Progreso del álbum
             </span>
-            <span className="text-white font-bold text-2xl">{progreso}%</span>
+            <span className="text-white font-bold text-2xl">
+              {stats ? `${stats.porcentaje}%` : '—'}
+            </span>
           </div>
           <div className="h-2 rounded-full overflow-hidden mb-2" style={{ background: 'rgba(255,255,255,0.2)' }}>
             <div
@@ -74,7 +81,7 @@ export default function InicioPage() {
             />
           </div>
           <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            {STATS.tengo} de {TOTAL_LAMINAS} láminas conseguidas
+            {stats ? `${stats.tengo} de ${TOTAL_LAMINAS} láminas conseguidas` : '—'}
           </p>
         </div>
       </div>
@@ -84,9 +91,9 @@ export default function InicioPage() {
         {/* Stats */}
         <div className="flex gap-3 mb-5">
           {[
-            { emoji: '🔄', valor: STATS.repetidas, label: 'Repetidas' },
-            { emoji: '🔍', valor: STATS.meFaltan,  label: 'Me faltan' },
-            { emoji: '✅', valor: STATS.tengo,     label: 'Tengo' },
+            { emoji: '🔄', valor: stats?.repetidas, label: 'Repetidas' },
+            { emoji: '🔍', valor: stats?.meFaltan,  label: 'Me faltan' },
+            { emoji: '✅', valor: stats?.tengo,     label: 'Tengo' },
           ].map(({ emoji, valor, label }) => (
             <div
               key={label}
@@ -94,7 +101,9 @@ export default function InicioPage() {
               style={{ background: '#f8f7ff', border: '1.5px solid #ebe8ff' }}
             >
               <p className="text-xl mb-1">{emoji}</p>
-              <p className="font-bold text-[28px] leading-none" style={{ color: '#534AB7' }}>{valor}</p>
+              <p className="font-bold text-[28px] leading-none" style={{ color: '#534AB7' }}>
+                {valor ?? '—'}
+              </p>
               <p className="text-[11px] font-medium mt-[3px]" style={{ color: '#888' }}>{label}</p>
             </div>
           ))}
